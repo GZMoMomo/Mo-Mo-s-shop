@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+</head>
+<body>
+<div class="col-sm-6 col-md-4" th:replace="top :: top"></div>
+<div class="container">
+    <div class="center-block">
+        <div class="jumbotron">
+            <h1>支付成功！</h1>
+            <p>可在订单处查看订单状态</p>
+            <p><a class="btn btn-primary btn-lg" th:href="@{/listOrder}" role="button">查看订单</a></p>
+        </div>
+    </div>
+</div>
+<div th:replace="footer :: footer"></div>
+</body>
+</html>

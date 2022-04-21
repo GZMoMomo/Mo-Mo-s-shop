@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+</head>
+<body>
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">订单详情</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover">
+                        <tr th:each="oi:${ois}">
+                            <td><img class="img-rounded" height="40px" th:src="@{|img/product/${oi.getPid()}.png|}"></td>
+                            <td th:text="${oi.product.name}"></td>
+                            <td th:text="|${oi.number}个|"></td>
+                            <td th:text="|单价：${oi.product.promoteprice}|"></td>
+                            <td shiro:hasRole="user"><a th:href="@{/reviewOrder(pid=${oi.product.id},oiid=${oi.id})}"><button  class="button btn-info">评价</button></a></td>
+                        </tr>
+                    </table>
+                </div>
+</body>
+</html>

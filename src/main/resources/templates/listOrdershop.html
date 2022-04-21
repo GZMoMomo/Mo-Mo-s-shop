@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+</head>
+<body>
+<div class="col-sm-6 col-md-4" th:replace="top :: top"></div>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/listOrder(start=0)}">订单管理</a></li>
+    </ol>
+
+    <!--表格行!-->
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>状态</th>
+                    <th>金额</th>
+                    <th>商品数量</th>
+                    <th>买家名称</th>
+                    <th>创建时间</th>
+                    <th>支付时间</th>
+                    <th>发货时间</th>
+                    <th>确认收货时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="o:${page}">
+                    <td th:text="${o.id}"></td>
+                    <td th:text="${o.getStatusDesc()}"></td>
+                    <td th:text="|${o.total}￥|"></td>
+                    <td th:text="${o.totalNumber}"></td>
+                    <td th:text="${o.user.name}"></td>
+                    <td th:text="${o.createDate}"></td>
+                    <td th:text="${o.payDate}"></td>
+                    <td th:text="${o.deliveryDate}"></td>
+                    <td th:text="${o.confirmDate}"></td>
+                    <td>
+                        <a th:href="@{/getOrderitem(oid=${o.id})}" data-toggle="modal" data-target="#getOrderitemModal"><button class="btn btn-default">查看详情</button></a>
+                        <div th:if="${o.status=='waitDelivery'}">
+                            <a th:href="@{/deliveryOrder(id=${o.id})}">
+                                <button class="btn btn-primary ">发货</button>
+                            </a>
+                        </div>
+                        <div th:if="${o.status=='waitConfirm'}">
+                                <p >待确认</p>
+                        </div>
+                        <div th:if="${o.status=='waitReview'}">
+                                <p>待评价</p>
+                        </div>
+                        <div th:if="${o.status=='finish'}">
+                                <p>订单已完成</p>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--分页行!-->
+        <div class="row">
+            <div class="col-md-12 col-md-offset-1">
+                <p th:text=|当前${page.number+1}页,总${page.totalPages}页,总${page.totalElements}条记录| />
+                <nav aria-label="Page navigation" >
+                    <ul class="pager">
+                        <li><a th:href="@{/listOrder(start=${page.number-1<0?0:page.number-1})}">上一页</a></li>
+                        <li><a th:href="@{/listOrder(start=${page.number+1>page.totalPages-1?page.totalPages-1:page.number+1})}">下一页</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <!-- 编辑Modal -->
+    <div class="modal fade" id="getOrderitemModal" tabindex="-1" role="dialog" aria-labelledby="getOrderitemModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+
+            </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+</div>
+</div>
+<div th:replace="footer :: footer"></div>
+</body>
+</html>

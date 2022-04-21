@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+
+</head>
+<body>
+  <div class="container">
+      <div class="col-sm-6 col-md-4" th:replace="top :: top"></div>
+      <div class="row">
+          <div class="col-xs-6 col-md-3">
+              <a href="#" class="thumbnail">
+                  <img th:src="@{|img/product/${p.id}.png|}">
+              </a>
+          </div>
+          <div class="col-xs-6 col-md-3">
+              <div class="page-header">
+                  <h1 th:text="${p.name}"><small th:text="${p.subtitle}"></small></h1>
+              </div>
+              <div class="page-body">
+                  <p >价格： <del th:text="${p.originalprice}"></del></p>
+                  <p th:text="|优惠价:${p.promoteprice}|"></p>
+              </div>
+              <div>
+                  <p th:text="|销量:${p.getSaleCount()}   累计评价:${p.getReviewCount()}|"></p>
+              </div>
+                  <div class="btn-group btn-group-lg" role="group">
+                      <form action="forbuyone">
+                      <input id="num" type="number" name="num" min="0" max="99" value="1" > <p th:text="|库存:${p.stock}|"></p>
+                      <input type="hidden" id="pid" name="pid" th:value="${p.id}">
+                      <button shiro:user="" type="submit" class="btn-danger" id="buy"   >立即购买</button>
+                      <button shiro:guest="" class="btn-danger" ><a  th:href="@{/login}">请登录点击购买</a></button>
+                          <button shiro:user="" class="btn-warning" type="button" id="add">加入购物车</button>
+                      </form>
+                  </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="page-header">
+              <h3>详情</h3>
+                  <div  th:each="pv:${pvs}">
+                      <p th:text="|${ps.get(pvs.indexOf(pv)).name}:${pv.value}|"></p>
+                  </div>
+              <h3>评论</h3>
+                  <div th:each="r:${reviews}">
+                      <p th:text="${r.getContent()}"></p>
+                  </div>
+          </div>
+      </div>
+  </div>
+  <div th:replace="footer :: footer"></div>
+<script>
+    $('#add').click(function () {
+        var pid=$('#pid').val();
+        var num=$('#num').val();
+        var addCartpage="foraddCart";
+        $.get(
+            addCartpage,
+            {"pid":pid,"num":num},
+            function (result) {
+                if("success"==result){
+                    alert("已加入购物车");
+                    $('#add').attr("disable","disable");
+                }else{
+
+                }
+            }
+        );
+        return false;
+    });
+</script>
+</body>
+</html>

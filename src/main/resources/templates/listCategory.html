@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+
+
+</head>
+<body>
+<div class="col-sm-6 col-md-4" th:replace="top :: top"></div>
+  <div class="container">
+      <ol class="breadcrumb">
+          <li><a th:href="@{/listCategory(start=0)}">分类管理</a></li>
+      </ol>
+      <!--表格行!-->
+      <div class="row">
+          <div class="col-md-12">
+              <table class="table table-hover">
+                  <thead>
+                  <tr>
+                      <th>ID</th>
+                      <th>图片</th>
+                      <th>分类名称</th>
+                      <th>属性管理</th>
+                      <th>产品管理</th>
+                      <th>编辑</th>
+                      <th>删除</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="c:${page}">
+                      <td th:text="${c.id}"></td>
+                      <td><img class="img-rounded" height="40px" th:src="@{|img/category/${c.id}.png|}"></td>
+                      <td th:text="${c.name}"></td>
+                      <td>
+                          <a th:href="@{listProperty(cid=${c.id})}"><button type="button" class="btn btn-default btn-sm" aria-label="Left Align"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>属性管理</button></a>
+                      </td>
+                      <td><a th:href="@{listProduct(cid=${c.id})}"><button type="button" class="btn btn-default btn-sm" aria-label="Left Align"><span class="glyphicon glyphicon-apple" aria-hidden="true"></span>产品管理</button></a> </td>
+                      <td><a th:href="@{/editCategory(id=${c.id})}" data-toggle="modal" data-target="#editModal"><button type="button" class="btn btn-default btn-sm" aria-label="Left Align"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>编辑</button></a> </td>
+                      <td><a th:href="@{/deleteCategory(id=${c.id})}"><button type="button" class="btn btn-default btn-sm" aria-label="Left Align"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>删除</button></a></a> </td>
+                  </tr>
+                  </tbody>
+              </table>
+          </div>
+          <!--分页行!-->
+          <div class="row">
+              <div class="col-md-12 col-md-offset-1">
+                  <p th:text=|当前${page.number+1}页,总${page.totalPages}页,总${page.totalElements}条记录| />
+                  <nav aria-label="Page navigation" >
+                      <ul class="pager">
+                          <li><a th:href="@{/listCategory(start=${page.number-1<0?0:page.number-1})}">上一页</a></li>
+                          <li><a th:href="@{/listCategory(start=${page.number+1>page.totalPages-1?page.totalPages-1:page.number+1})}">下一页</a></li>
+                          <li><a  data-toggle="modal" data-target="#myModal">新增分类</a></li>
+                      </ul>
+                  </nav>
+              </div>
+          </div>
+
+      </div>
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">新增分类</h4>
+              </div>
+              <div class="modal-body">
+                  <form action="addCategory" method="post" enctype="multipart/form-data" onsubmit="return checkcategoryEmpty()">
+                      <div class="form-group ">
+                          <label for="exampleInputCategoryname">分类名称</label>
+                          <input type="text"  class="form-control " id="exampleInputCategoryname" name="name" placeholder="分类名称">
+                      </div>
+                      <div class="form-group ">
+                          <label for="image">分类图片</label>
+                          <input type="file" id="image" accept="image/*" name="image">
+                          <p class="help-block">Select separate picture</p>
+                      </div>
+              <div class="modal-footer ">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  <button type="submit" id="categorySubmit" class="btn btn-primary" >提交</button>
+              </div>
+              </form>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+   </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+
+
+              </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+      </div>
+  </div>
+
+
+  <script type="text/javascript">
+      function  checkcategoryEmpty() {
+          var valuename=document.getElementById('exampleInputCategoryname').value.length;
+          var value=document.getElementById('image').value.length;
+          if(valuename==0) {
+              alert("分类名称不能为空!");
+              return false;
+          }
+          if(value==0) {
+              alert("图片不能为空!");
+              return false;
+          }
+          return true;
+      }
+  </script>
+<div th:replace="footer :: footer"></div>
+</body>
+</html>

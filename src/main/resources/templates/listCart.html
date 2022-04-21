@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+</head>
+<body>
+<div class="col-sm-6 col-md-4" th:replace="top :: top"></div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">购物车</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="check_all"></th>
+                    <th>图片</th>
+                    <th>商品信息</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>金额</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="oi:${ois}">
+                    <td><input type="checkbox" class="check_item" id="check_item" th:oiid="${oi.id}" ></td>
+                    <td><img class="img-rounded" height="40px" th:src="@{|img/product/${oi.getPid()}.png|}"></td>
+                    <td th:text="|${oi.product.name}  ${oi.product.subtitle}|"></td>
+                    <td>
+                        <del th:text="${oi.product.originalprice}"></del>
+                        <p th:text="${oi.product.promoteprice}"></p>
+                    </td>
+                    <td><input type="number" class="number" min="0" max="100" th:value="${oi.number}" th:numid="${oi.id}"></td>
+                    <td class="itemPrice" th:text="${(oi.product.promoteprice)*(oi.number)}"></td>
+                    <td class="delete_btn" th:oiid="${oi.id}"><button class="btn btn-warning">删除</button></td>
+                </tr>
+                </tbody>
+               </table>
+            <div class="pull-right"><h4 class="text-danger"  id="totalPrice">总金额:￥0</h4><button class="btn btn-danger btn-lg" id="buy">结算</button></div>
+        </div>
+    </div>
+</div>
+<div th:replace="footer :: footer"></div>
+<script>
+    //全选、全不选功能
+    $("#check_all").click(function(){
+        //用prop获取dom原生的属性，attr获取自定义属性
+        $(".check_item").prop("checked",$(this).prop("checked"));
+        var totalPrice=0;
+        $.each($(".check_item:checked"),function () {
+            totalPrice+=parseFloat(String($(this).parents("tr").find("td:eq(5)").text()));
+        });
+
+        $("#totalPrice").html("总金额:￥"+totalPrice);
+    });
+
+    $(document).on("click",".check_item",function(){
+        var flag = $(".check_item:checked").length==$(".check_item").length;
+        $("#check_all").prop("checked",flag);
+    });
+
+    $(document).on("click",".delete_btn",function () {
+        var id=$(this).attr("oiid");
+        $.ajax({
+            url:"deleteOrderitem",
+            data:{"id":id},
+            type:"post",
+            success:function () {
+             location.reload();
+            }
+        });
+    });
+
+    $(".number").change(function(){
+        var url="changenumberOrderitem";
+        var id=$(this).attr("numid");
+        var num=$(this).val();
+        $.ajax({
+            url,
+            data: {"id":id,"num":num},
+            type: "post",
+            success:function () {
+               location.reload();
+            }
+        });
+    });
+
+
+
+    $(document).on("click",".check_item",function(){
+        var totalPrice=0;
+        $.each($(".check_item:checked"),function () {
+            totalPrice+=parseFloat(String($(this).parents("tr").find("td:eq(5)").text()));
+        });
+
+        $("#totalPrice").html("总金额:￥"+totalPrice);
+    });
+
+   $("#buy").click(function () {
+       var oiids=[];
+       $.each($(".check_item:checked"),function () {
+           var oiid=$(this).attr("oiid");
+           oiids.push(oiid);
+       });
+       var tostr=oiids.toString();
+       var str=tostr.substring(0,tostr.length);
+       window.location.href="forbuymany?str="+str;
+
+   });
+
+
+
+</script>
+</body>
+</html>

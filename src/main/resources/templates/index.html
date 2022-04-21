@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+</head>
+<body>
+<div class="container" th:fragment="home">
+    <div class="col-sm-6 col-md-4" th:replace="top :: top"></div>
+    <div class="col-sm-6 col-md-4"  th:replace="carousel :: carousel"></div>
+    <!-- Example row of columns -->
+    <div class="row" th:each="c:${cs}">
+        <div class="col-sm-6 col-md-4 " th:each="p:${c.getProducts()}">
+            <div class="thumbnail">
+                <img th:src="@{|img/product/${p.id}.png|}" class="img-responsive" th:alt="|库存：${p.stock}|">
+                <div class="caption">
+                    <h3 th:text="${p.name}"></h3>
+                    <p th:text="${p.subtitle}"></p>
+                    <p class="text-warning" th:text="|￥${p.promoteprice}|"></p>
+                    <p><a th:href="@{/productDetails(pid=${p.id})}" class="btn btn-primary" role="button">查看详情</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="footer :: footer"></div>
+</div>
+</body>
+</html>

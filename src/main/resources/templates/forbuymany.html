@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+</head>
+<body>
+<div class="col-sm-6 col-md-4" th:replace="top :: top"></div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">输入收货地址 <button type="submit" class="btn btn-info"><a th:href="@{/listCart}">返回</a></button></div>
+        <form class="form-horizontal" action="createOrder" method="post">
+            <div class="form-group">
+                <label for="inputaddress" class="col-sm-2 control-label">地址</label>
+                <div class="col-sm-10">
+                    <input type="address" class="form-control" id="inputaddress" name="address" placeholder="地址">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputpost" class="col-sm-2 control-label">邮政编码</label>
+                <div class="col-sm-10">
+                    <input type="post" class="form-control" id="inputpost" name="post" placeholder="邮政编码">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputreceiver" class="col-sm-2 control-label">收货人姓名</label>
+                <div class="col-sm-10">
+                    <input type="receiver" class="form-control" id="inputreceiver" name="receiver" placeholder="收货人姓名">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputmobile" class="col-sm-2 control-label">电话</label>
+                <div class="col-sm-10">
+                    <input type="mobile" class="form-control" id="inputmobile" name="mobile" placeholder="电话">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputuserMessage" class="col-sm-2 control-label">给卖家留言</label>
+                <div class="col-sm-10">
+                    <input type="userMessage" class="form-control" id="inputuserMessage" name="userMessage" placeholder="给卖家留言">
+                </div>
+            </div>
+            <table class="table" >
+                <tr>
+                    <td>图片</td>
+                    <td>商品名</td>
+                    <td>小标题</td>
+                    <td>单价</td>
+                    <td>数量</td>
+                    <td>小计</td>
+                </tr>
+                <tr th:each="p:${ps}">
+                    <td><img class="img-rounded" height="40px" th:src="@{|img/product/${p.id}.png|}"></td>
+                    <td th:text="${p.name} "></td>
+                    <td th:text="${p.subtitle}"></td>
+                    <td th:text="|￥${p.promoteprice}|"></td>
+                    <td th:text="${os.get(ps.indexOf(p)).number}"></td>
+                    <td th:text="${price}"></td>
+                </tr>
+            </table>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <p th:text="|共计:${price}|"></p>
+                    <button type="submit" class="btn btn-danger">付款</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+<div th:replace="footer :: footer"></div>
+</body>
+</html>
